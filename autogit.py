@@ -2,9 +2,6 @@ import sublime, sublime_plugin, os, codecs
 import shutil
 import sys, platform
 from os.path import expanduser
-from functools import partial
-from hashlib import sha1
-import paths
 
 # Paths
 

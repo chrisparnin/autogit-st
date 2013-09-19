@@ -84,19 +84,13 @@ class GitRepository():
 
 		index = git.open_index()
 
-		changes = list(tree_changes(git, index.commit(git.object_store), git['HEAD'].tree))
-		if changes and len(changes) > 0:
-			return git.do_commit( '%s - autogit commit (via dulwich)' % kind)
+		if git.head():
+			changes = list(tree_changes(git, index.commit(git.object_store), git['HEAD'].tree))
+			if changes and len(changes) > 0:
+				return git.do_commit( '%s - autogit commit (via dulwich)' % kind)
+		else:
+			return git.do_commit( '%s - autogit commit (via dulwich)' % kind)				
 		return None
-
-	def lookup_entry(self, abspath):
-
-		with open(abspath, 'rb') as git_file:
-			data = git_file.read()
-			s = sha1()
-			s.update("blob %u\0" % len(data))
-			s.update(data)
-		return (s.hexdigest(), os.stat(abspath).st_mode)	
 
 
 	def pygit2Commit(self, filePath, kind):

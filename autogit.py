@@ -84,14 +84,15 @@ class GitRepository():
 
 		index = git.open_index()
 
-		if git.head():
-			changes = list(tree_changes(git, index.commit(git.object_store), git['HEAD'].tree))
-			if changes and len(changes) > 0:
-				return git.do_commit( '%s - autogit commit (via dulwich)' % kind)
-		else:
+		try:
+			head = git.head()
+		except KeyError:
 			return git.do_commit( '%s - autogit commit (via dulwich)' % kind)				
-		return None
 
+		changes = list(tree_changes(git, index.commit(git.object_store), git['HEAD'].tree))
+		if changes and len(changes) > 0:
+			return git.do_commit( '%s - autogit commit (via dulwich)' % kind)
+		return None
 
 	def pygit2Commit(self, filePath, kind):
 
